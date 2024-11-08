@@ -23,6 +23,10 @@ func TestClientCanHitAPI(t *testing.T) {
 		myClient := NewClient()
 		_, err := myClient.GetPokemonByName(context.Background(), "non-existant-pokemon")
 		assert.Error(t, err)
+		assert.Equal(t, PokenonFetchErr{
+			Message: "non-200 status code from API",
+			StatusCode: 404,
+		}, err)
 	})
 
 	t.Run("happy path - testing the WithAPIURL option function", func(t *testing.T) {
@@ -72,7 +76,6 @@ func TestClientCanHitAPI(t *testing.T) {
 		myClient := NewClient(
 			WithAPIURL(ts.URL),
 		)
-		fmt.Println(ts.URL)
 		poke, err := myClient.GetPokemonByName(context.Background(), "pikachu")
 		assert.Error(t, err)
 		assert.Equal(t, 0, poke.Height)

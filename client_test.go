@@ -2,7 +2,9 @@ package client
 
 import (
 	"context"
+	"net/http"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -19,5 +21,24 @@ func TestClientCanHitAPI(t *testing.T) {
 		myClient := NewClient()
 		_, err := myClient.GetPokemonByName(context.Background(), "non-existant-pokemon")
 		assert.Error(t, err)
+	})
+
+	t.Run("happy path - testing the WithAPIURL option function", func(t *testing.T) {
+		myClient := NewClient(
+			WithAPIURL("my-test-url"),
+		)
+		assert.Equal(t, "my-test-url", myClient.apiURL)
+	})
+
+	t.Run("happy path - test with httpclient works", func(*testing.T) {
+		myClient := NewClient(
+			WithHTTPClient(&http.Client{
+				Timeout: 1 * time.Second,
+			}),
+			WithAPIURL("my-test-url"),
+		)
+
+		assert.Equal(t, "my-test-url", myClient.apiURL)
+		assert.Equal(t, 1 * time.Second, myClient.httpClient.Timeout)
 	})
 }

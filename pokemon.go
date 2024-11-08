@@ -8,7 +8,7 @@ import (
 )
 
 func (c *Client) GetPokemonByName(ctx context.Context, pokemonName string) (Pokemon, error) {
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, "https://pokeapi.co/api/v2/pokemon/"+pokemonName, nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, c.apiURL + "/api/v2/pokemon/"+pokemonName, nil)
 	if err != nil {
 		return Pokemon{}, err
 	}
